@@ -4,9 +4,11 @@
 \alias{supercell_purity}
 \title{Compute purity of super-cells}
 \usage{
-supercell_purity(clusters, supercell_membership)
+supercell_purity(ge = NULL, clusters = NULL, supercell_membership)
 }
 \arguments{
+\item{ge}{gene expression use to compute the purity based on gene expression values}
+
 \item{clusters}{vector of clustering assignment (reference assignment)}
 
 \item{supercell_membership}{vector of assignment of single-cell data to super-cells (membership field of \code{\link{SCimplify}} function output)}
