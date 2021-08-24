@@ -1,0 +1,19 @@
+Load library
+```{r}
+library(SuperCell)
+```
+
+Load data
+```{r}
+sc <- readRDS("~/")
+data(cell_lines) # list with GE - gene expression matrix (logcounts), meta - cell meta data
+GE <- cell_lines$GE
+dim(GE) # genes as rows and cells as columns
+cell.meta <- cell_lines$meta
+```
+
+```{r}
+gamma.seq <- 
+Scim <- SCimplify()
+```
+

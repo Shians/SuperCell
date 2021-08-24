@@ -25,3 +25,13 @@ supercell_purity <- function(clusters, supercell_membership){
   res              <- apply(cl.gr, 2, max)
   return(res)
 }
+
+
+#' Purity based on transcriptionally
+#'
+#'  @param GE
+#'  @export
+
+supercell_purity_GE <- function(GE, SCim){
+  return(TRUE)
+}
