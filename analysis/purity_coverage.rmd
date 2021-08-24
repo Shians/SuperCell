@@ -5,15 +5,22 @@ library(SuperCell)
 
 Load data
 ```{r}
-sc <- readRDS("~/")
-data(cell_lines) # list with GE - gene expression matrix (logcounts), meta - cell meta data
-GE <- cell_lines$GE
+library(Seurat)
+seurat <- readRDS("~/BigSet/data/sars-covid-19/seurat/S-HC010.rds")
+GE <- GetAssayData(seurat, slot = "data")
 dim(GE) # genes as rows and cells as columns
-cell.meta <- cell_lines$meta
+cell.meta <- seurat$majorType
+table(cell.meta)
 ```
 
 ```{r}
-gamma.seq <- 
-Scim <- SCimplify()
+gamma.seq <- c(2, 5, 10, 20, 50, 100)
+Scim.list <- lapply(gamma.seq, FUN = function(x) SCimplify(GE, gamma = x))
+purity.list <- lapply(Scim.list, FUN = function(x) median(supercell_purity(clusters = cell.meta, supercell_membership = x$membership)))
+unlist(purity.list)
+```
+
+```{r}
+SCim <- Scim.list[[1]]
 ```
 

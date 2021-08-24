@@ -29,9 +29,19 @@ supercell_purity <- function(clusters, supercell_membership){
 
 #' Purity based on transcriptionally
 #'
-#'  @param GE
+#'  @param GE gene expression matrix
+#'  @param membership membership vector
 #'  @export
 
-supercell_purity_GE <- function(GE, SCim){
-  return(TRUE)
+supercell_purity_GE <- function(GE, membership){
+  # Compute cosine distance matrix
+  ge <- sweep(GE, MARGIN = 2, STATS = sqrt(Matrix::colSums(GE**2)), FUN = "/")
+  dist <- Matrix::crossprod(ge)
+
+  # Make a membership mask matrix
+  mask <- 1*(outer(membership, membership, FUN = "-") == 0)
+
+  # Compute the mean purity
+  purity <- Matrix::colSums(dist*mask)/Matrix::colSums(mask)
+  return(purity)
 }
