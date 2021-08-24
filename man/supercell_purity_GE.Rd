@@ -2,12 +2,12 @@
 % Please edit documentation in R/supercell_purity.R
 \name{supercell_purity_GE}
 \alias{supercell_purity_GE}
-\title{Purity based on transcriptionally}
+\title{Mean transcriptional purity}
 \usage{
 supercell_purity_GE(GE, membership)
 }
 \description{
 @param GE gene expression matrix
- @param membership membership vector
+ @param membership membership vector (or a list membership vectors)
  @export
 }

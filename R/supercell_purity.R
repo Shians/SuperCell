@@ -27,10 +27,10 @@ supercell_purity <- function(clusters, supercell_membership){
 }
 
 
-#' Purity based on transcriptionally
+#' Mean transcriptional purity
 #'
 #'  @param GE gene expression matrix
-#'  @param membership membership vector
+#'  @param membership membership vector (or a list membership vectors)
 #'  @export
 
 supercell_purity_GE <- function(GE, membership){
@@ -38,10 +38,18 @@ supercell_purity_GE <- function(GE, membership){
   ge <- sweep(GE, MARGIN = 2, STATS = sqrt(Matrix::colSums(GE**2)), FUN = "/")
   dist <- Matrix::crossprod(ge)
 
-  # Make a membership mask matrix
-  mask <- 1*(outer(membership, membership, FUN = "-") == 0)
-
-  # Compute the mean purity
-  purity <- Matrix::colSums(dist*mask)/Matrix::colSums(mask)
-  return(purity)
+  get_purity <- function(membership){
+    # Make a membership mask matrix
+    mask <- 1*(outer(membership, membership, FUN = "-") == 0)
+    # Compute the mean purity
+    purity <- Matrix::colSums(dist*mask)/Matrix::colSums(mask)
+    return(purity)
+  }
+  # Compute
+  if (typeof(membership) == "list"){
+    res <- lapply(membership, FUN = get_purity)
+  } else {
+    res <- get_purity(membership)
+  }
+  return(res)
 }

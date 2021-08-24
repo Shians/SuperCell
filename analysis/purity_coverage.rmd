@@ -12,15 +12,27 @@ dim(GE) # genes as rows and cells as columns
 cell.meta <- seurat$majorType
 table(cell.meta)
 ```
-
+# Compute the purity
 ```{r}
 gamma.seq <- c(2, 5, 10, 20, 50, 100)
 Scim.list <- lapply(gamma.seq, FUN = function(x) SCimplify(GE, gamma = x))
-purity.list <- lapply(Scim.list, FUN = function(x) median(supercell_purity(clusters = cell.meta, supercell_membership = x$membership)))
-unlist(purity.list)
+membership.list <- lapply(Scim.list, FUN = function(x){x$membership})
+purity.cluster.list <- lapply(Scim.list, FUN = function(x) median(supercell_purity(clusters = cell.meta, supercell_membership = x$membership)))
+purity.ge.list <- supercell_purity_GE(GE, membership = membership.list)
+
+purity.ge <- unlist(purity.ge.list)
+purity.cluster <- unlist(purity.cluster.list)
+```
+# Compute the "coverage"
+```{r}
+genes <- Scim.list[[1]]$genes.use
+coverage <- sapply(Scim.list, 
+                       function(x){ 
+                       coverage <- supercell_NonZero(GE, x$membership, genes = genes)
+                       return(coverage)})
 ```
 
 ```{r}
-SCim <- Scim.list[[1]]
+plot(purity.ge, coverage)
 ```
 
