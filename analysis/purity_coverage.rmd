@@ -14,13 +14,13 @@ table(cell.meta)
 ```
 # Compute the purity
 ```{r}
-gamma.seq <- c(2, 5, 10, 20, 50, 100)
+gamma.seq <- c(1, 2, 5, 10, 20, 50, 100)
 Scim.list <- lapply(gamma.seq, FUN = function(x) SCimplify(GE, gamma = x))
 membership.list <- lapply(Scim.list, FUN = function(x){x$membership})
 purity.cluster.list <- lapply(Scim.list, FUN = function(x) median(supercell_purity(clusters = cell.meta, supercell_membership = x$membership)))
 purity.ge.list <- supercell_purity_GE(GE, membership = membership.list)
 
-purity.ge <- unlist(purity.ge.list)
+purity.ge <- sapply(purity.ge.list, FUN = mean)
 purity.cluster <- unlist(purity.cluster.list)
 ```
 # Compute the "coverage"
@@ -30,9 +30,15 @@ coverage <- sapply(Scim.list,
                        function(x){ 
                        coverage <- supercell_NonZero(GE, x$membership, genes = genes)
                        return(coverage)})
+df <- data.frame(coverage = colMeans(coverage), purity.ge = purity.ge, gamma = gamma.seq)
 ```
 
 ```{r}
-plot(purity.ge, coverage)
+library(ggplot2)
+p1 <- ggplot(df, aes(x = gamma, y = purity.ge)) + geom_line() + geom_point() + ggtitle("purity")
+p2 <- ggplot(df, aes(x = gamma, y = coverage)) + geom_line() + geom_point() + ggtitle("coverage")
+p3 <- ggplot(df, aes(x = coverage, y = purity.ge, label = gamma)) + geom_line() + geom_point() + ggtitle("coverage vs. purity") + geom_text(nudge_x = 0.05)
+p1 + p2 + p3
+ggsave(filename = "./analysis/purity_coverage.png", plot = p1 + p2 + p3, width = 10, height = 5)
 ```
 
