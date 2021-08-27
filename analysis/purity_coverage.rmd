@@ -1,11 +1,11 @@
-
+# Analysis for finding optimal gammas by the gene expression purity
 
 Load library
 ```{r}
 library(SuperCell)
 ```
 
-Load data
+Load sars-covid-2 data
 ```{r}
 library(Seurat)
 seurat <- readRDS("~/BigSet/data/sars-covid-19/seurat/S-HC010.rds")
@@ -25,7 +25,7 @@ purity.ge.list <- supercell_purity_GE(GE, membership = membership.list, exclude.
 purity.ge <- sapply(purity.ge.list, FUN = mean)
 purity.cluster <- unlist(purity.cluster.list)
 ```
-# Compute the "coverage"
+# Compute the average "coverage" (non-drop out rate) for high variable genes
 ```{r}
 genes <- Scim.list[[1]]$genes.use
 coverage <- sapply(Scim.list, 
@@ -33,6 +33,7 @@ coverage <- sapply(Scim.list,
                        coverage <- supercell_NonZero(GE, x$membership, genes = genes)
                        return(coverage)})
 df <- data.frame(coverage = colMeans(coverage), purity.ge = purity.ge, gamma = gamma.seq)
+df <- df[df$gamma != 1, ]
 ```
 
 ```{r}
