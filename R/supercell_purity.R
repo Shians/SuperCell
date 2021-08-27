@@ -33,7 +33,7 @@ supercell_purity <- function(clusters, supercell_membership){
 #'  @param membership membership vector (or a list membership vectors)
 #'  @export
 
-supercell_purity_GE <- function(GE, membership){
+supercell_purity_GE <- function(GE, membership, exclude.single.cells = FALSE){
   # Compute cosine distance matrix
   ge <- sweep(GE, MARGIN = 2, STATS = sqrt(Matrix::colSums(GE**2)), FUN = "/")
   dist <- Matrix::crossprod(ge)
@@ -43,6 +43,16 @@ supercell_purity_GE <- function(GE, membership){
     mask <- 1*(outer(membership, membership, FUN = "-") == 0)
     # Compute the mean purity
     purity <- Matrix::colSums(dist*mask)/Matrix::colSums(mask)
+    if (exclude.single.cells == TRUE){
+      size <- unname(table(membership))
+      size <- size[membership]
+      single.cells <- unname(size == 1)
+      if (all(single.cells)){
+        purity <- 1
+      } else {
+        purity <- purity[!single.cells]
+      }
+    }
     return(purity)
   }
   # Compute

@@ -4,7 +4,7 @@
 \alias{supercell_purity_GE}
 \title{Mean transcriptional purity}
 \usage{
-supercell_purity_GE(GE, membership)
+supercell_purity_GE(GE, membership, exclude.single.cells = FALSE)
 }
 \description{
 @param GE gene expression matrix

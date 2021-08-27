@@ -1,3 +1,5 @@
+
+
 Load library
 ```{r}
 library(SuperCell)
@@ -18,7 +20,7 @@ gamma.seq <- c(1, 2, 5, 10, 20, 50, 100)
 Scim.list <- lapply(gamma.seq, FUN = function(x) SCimplify(GE, gamma = x))
 membership.list <- lapply(Scim.list, FUN = function(x){x$membership})
 purity.cluster.list <- lapply(Scim.list, FUN = function(x) median(supercell_purity(clusters = cell.meta, supercell_membership = x$membership)))
-purity.ge.list <- supercell_purity_GE(GE, membership = membership.list)
+purity.ge.list <- supercell_purity_GE(GE, membership = membership.list, exclude.single.cells = TRUE)
 
 purity.ge <- sapply(purity.ge.list, FUN = mean)
 purity.cluster <- unlist(purity.cluster.list)
