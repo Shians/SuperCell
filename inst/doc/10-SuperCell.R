@@ -7,7 +7,7 @@ knitr::opts_chunk$set(
 )
 
 ## ----library, warning=FALSE---------------------------------------------------
-if (!requireNamespace("remotes")) install.packages("remotes") 
+if (!requireNamespace("remotes")) install.packages("remotes")
 remotes::install_github("GfellerLab/SuperCell")
 
 library(SuperCell)
